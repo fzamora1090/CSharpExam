@@ -1,0 +1,73 @@
+@model List<Event>;
+
+<div class="container">
+    <h3 class="text-center" >All Activities</h3> 
+
+</div>
+<hr>
+<div>
+    
+    <div class="card mx-auto text-center mb-3" style="">
+        <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Date & Time</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Description</th>
+                <th scope="col">No. of Registrants</th>
+                <th scope="col">Action</th>
+
+
+
+            </tr>
+        </thead>
+        @foreach (Event currentEvent in Model.AsEnumerable().Reverse())
+        {
+            
+                <tbody>
+                    @if(@currentEvent.Date < DateTime.Now)
+                    {
+                        <td style="display:None;">@currentEvent</td>
+                        
+                    }
+                    <tr>
+                        <td> <a href="/events/@currentEvent.EventId">@currentEvent.Title</a></td>
+                        <td> @currentEvent.Date.ToShortDateString() & @currentEvent.Time</td>
+                        <td> @currentEvent.Duration Hours</td>
+                        <td>@currentEvent.Coordinator.FullName()</td>
+                        <td>@currentEvent.Registrants.Count</td>
+                        <td>
+                            @if(currentEvent.Registrants.Any(e => e.UserId == ViewBag.UserId))
+                                {
+                                    <form asp-controller="Events" asp-action="Reg"  method="Post" asp-route-eventId="@currentEvent.EventId" >
+                                        <button class="btn-sm btn-secondary"> UnRegister</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Events" asp-action="Reg"  method="Post" asp-route-eventId="@currentEvent.EventId" >
+                                        <button class="btn-sm btn-primary"> Register</button>
+                                    </form>
+                                }
+                            @if(currentEvent.UserId == ViewBag.UserId)
+                                {
+                                    <form asp-contoller="Events" asp-action="Delete" asp-route-eventId="@currentEvent.EventId" method="Post">
+                                        <button class="mt-2 btn-sm btn-danger">Delete</button>
+                                    </form>
+                                }
+                            
+                        </td>
+
+
+                    </tr>
+                
+                </tbody>
+        }
+            </table>  
+
+        </div>
+        <p class="text-right "><a asp-controller="Events" asp-action="New">New Event</a> </p>
+
+        
+</div>

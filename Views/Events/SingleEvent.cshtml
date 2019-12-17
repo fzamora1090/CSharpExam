@@ -1,0 +1,30 @@
+@model Event
+
+<div class="container">
+    <div class="jumbotron">
+        @if(Model.Registrants.Any(e => e.UserId == ViewBag.UserId))
+            {
+                <form asp-controller="Events" asp-action="Reg"  method="Post" asp-route-eventId="@Model.EventId" >
+                    <button class="float-right btn-primary"> UnRegister</button>
+                </form>
+            }
+            else
+            {
+                <form asp-controller="Events" asp-action="Reg"  method="Post" asp-route-eventId="@Model.EventId" >
+                    <button class="float-right btn-primary"> Register</button>
+                </form>
+            }
+
+        <u><h4>Coordinator:  @Model.Coordinator.FullName()</h4></u>
+        <h5>Description</h5>
+        <p>@Model.Description</p>
+        <h6>People Going</h6>
+        <div class="overflow-auto">
+            @foreach(var guest in Model.Registrants)
+            {
+                <li>@guest.Guest.FullName()</li>
+            }
+        </div>
+        
+    </div>
+</div>
